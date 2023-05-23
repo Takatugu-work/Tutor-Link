@@ -1,11 +1,7 @@
-import Document, { Html, Main, NextScript, Head } from "next/document"
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+import { Suspense } from 'react';
 
 class MyDocument extends Document {
-  // Only uncomment if you need to customize this behaviour
-  // static async getInitialProps(ctx: DocumentContext) {
-  //   const initialProps = await Document.getInitialProps(ctx)
-  //   return {...initialProps}
-  // }
   render() {
     return (
       <Html lang="en">
@@ -15,8 +11,8 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }
 
-export default MyDocument
+export default MyDocument;

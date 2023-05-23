@@ -1,0 +1,29 @@
+// cSpell Settings
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "blitzjs",
+    "layouts",
+    "Blitz",
+    "notistack",
+    "hookform",
+    "behaviour",
+    "tsbuildinfo",
+    "datasource",
+    "Bitstream"
+  ],
+  "ignorePaths": [
+    ".vscode",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    "**/.github/**",
+    "**/node_modules/**",
+    "**/.env",
+    "**/.env.local",
+    "**/.env.local.sample",
+    "**/package.json",
+    "**/package-lock.json",
+    "./db/migrations/**"
+  ]
+}

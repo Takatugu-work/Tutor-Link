@@ -5,18 +5,20 @@
     "dev": "blitz dev",
     "build": "blitz build",
     "start": "blitz start",
+    "lint": "eslint **/*.{js,ts,tsx} . --max-warnings 0",
+    "lint-fix": "eslint **/*.{js,ts,tsx} . --fix",
+    "spellCheck": "cspell lint --no-progress --relative --show-context **/*.{js,ts,tsx} .",
+    "type-check:watch": "tsc -noEmit -watch",
+    "type-check": "tsc -noEmit",
+    "server:watch": "prisma generate --watch",
+    "db/push": "prisma db push",
     "studio": "blitz prisma studio",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "prepare": "husky install"
   },
   "prisma": {
     "schema": "db/schema.prisma"
-  },
-  "prettier": {
-    "semi": false,
-    "printWidth": 100
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -27,17 +29,23 @@
     "@blitzjs/auth": "2.0.0-beta.27",
     "@blitzjs/next": "2.0.0-beta.27",
     "@blitzjs/rpc": "2.0.0-beta.27",
+    "@emotion/react": "11.11.0",
+    "@emotion/styled": "11.11.0",
+    "@hookform/error-message": "2.0.1",
+    "@hookform/resolvers": "2.9.11",
+    "@mui/icons-material": "5.11.16",
+    "@mui/material": "5.13.1",
     "@prisma/client": "4.6.1",
     "blitz": "2.0.0-beta.27",
-    "next": "^13.3.0",
+    "next": "13.4.3",
+    "notistack": "3.0.1",
     "prisma": "4.6.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "7.43.9",
     "secure-password": "4.0.0",
     "zod": "3.20.2",
-    "react-hook-form": "7.43.9",
-    "@hookform/resolvers": "2.9.11",
-    "@hookform/error-message": "2.0.1"
+    "zod-prisma-types": "2.7.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "12.0.8",
@@ -49,9 +57,11 @@
     "@types/react": "18.0.25",
     "@typescript-eslint/eslint-plugin": "5.42.1",
     "@vitejs/plugin-react": "2.2.0",
+    "cspell": "6.31.1",
     "eslint": "8.27.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
     "husky": "8.0.2",
     "jsdom": "20.0.3",
     "lint-staged": "13.0.3",

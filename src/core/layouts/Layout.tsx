@@ -1,21 +1,30 @@
-import Head from "next/head"
-import React, { FC } from "react"
-import { BlitzLayout } from "@blitzjs/next"
+import Head from 'next/head';
+import React, { FC } from 'react';
+import { BlitzLayout } from '@blitzjs/next';
+import { Navbar } from '../components/Navbar';
+import { SnackbarProvider } from 'notistack';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from 'src/util/defaultTheme';
 
+export const dynamic = 'force-dynamic';
 const Layout: BlitzLayout<{ title?: string; children?: React.ReactNode }> = ({
   title,
   children,
 }) => {
   return (
     <>
-      <Head>
-        <title>{title || "tutor-link"}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      {children}
+      <SnackbarProvider>
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>Tutor Link</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <Navbar />
+          <main>{children}</main>
+        </ThemeProvider>
+      </SnackbarProvider>
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

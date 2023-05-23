@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -10,23 +10,103 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider         = "zod-prisma-types"
+  output           = "./schema/"
+  createInputTypes = false
+}
+
+// ユーザーのタイプ
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+// 性別
+
+enum GENDER {
+  MAN
+  WOMEN
+}
+
 // --------------------------------------
 
 model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String?
-  email          String   @unique
-  hashedPassword String?
-  role           String   @default("USER")
+  id        String    @id @default(uuid()) /// @zod.custom.omit([model, input])
+  // 名前
+  name      String
+  // メールアドレス
+  email     String
+  // パスワード
+  password  String
+  // ユーザータイプ
+  role      String
+  // 教師のテーブルとのリレーション
+  Teacher   Teacher[]
+  // 生徒テーブルとのリレーション
+  Student   Student[]
+  //セッション idを保管
+  sessions  Session[]
+  tokens    Token[]
+  createdAt DateTime  @default(now()) /// @zod.custom.omit([model, input])
+  updatedAt DateTime  @updatedAt /// @zod.custom.omit([model, input])
+}
 
-  tokens   Token[]
-  sessions Session[]
+// 教師
+
+model Teacher {
+  id         String   @id @default(uuid()) /// @zod.custom.omit([model, input])
+  // 名前
+  name       String
+  // 世代
+  age        String
+  // 教科
+  subject    String[]
+  // 性別
+  gender     String
+  // 大学
+  school     String
+  // 値段
+  price      String?
+  // 住所
+  prefecture String[]
+  // コメント
+  comment    String?
+  createdAt  DateTime @default(now()) /// @zod.custom.omit([model, input])
+  updatedAt  DateTime @updatedAt /// @zod.custom.omit([model, input])
+  // Userテーブル
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+}
+
+// 生徒
+
+model Student {
+  id         String   @id @default(uuid()) /// @zod.custom.omit([model, input])
+  // 名前
+  name       String
+  // 学年
+  school     String
+  // 住所
+  prefecture String
+  //年齢
+  age        String
+  // 科目
+  subject    String[]
+  // 性別
+  gender     String
+  // コメント
+  comment    String?
+  createdAt  DateTime @default(now()) /// @zod.custom.omit([model, input])
+  updatedAt  DateTime @updatedAt /// @zod.custom.omit([model, input])
+  // Userテーブル
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 model Session {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -36,12 +116,12 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Token {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   hashedToken String
@@ -51,8 +131,8 @@ model Token {
   expiresAt   DateTime
   sentTo      String
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   @@unique([hashedToken, type])
 }

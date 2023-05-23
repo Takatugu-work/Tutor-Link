@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14
+    container_name: tutor-link
+    ports:
+      - '5889:5432'
+    environment:
+      - POSTGRES_USER=tutor_link_user
+      - POSTGRES_PASSWORD=tutor_link_password
+      - POSTGRES_DB=tutor_link
+
+volumes:
+  data:
