@@ -17,3 +17,7 @@ db/push:
 # データベース GUI を起動する
 db/watch:
 	npm run studio
+
+# 依存パッケージをインストールする
+install/dependencies
+	npm ci
