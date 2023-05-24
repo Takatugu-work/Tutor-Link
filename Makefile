@@ -19,5 +19,5 @@ db/watch:
 	npm run studio
 
 # 依存パッケージをインストールする
-install/dependencies
+install/dependencies:
 	npm ci
