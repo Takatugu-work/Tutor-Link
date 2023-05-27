@@ -18,7 +18,7 @@ module.exports = {
       },
       rules: {
         '@typescript-eslint/no-floating-promises': 'error',
-        'prettier/prettier': 'error',
+        'prettier/prettier': 'warn',
         'no-use-before-define': 'off',
         '@typescript-eslint/no-use-before-define': ['off'],
         'no-redeclare': 'off',

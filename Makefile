@@ -1,6 +1,6 @@
 # クライアントを起動する
 client/start:
-	blitz dev
+	npm run dev
 
 # クライアントの型定義をチェックする
 client/type-check/watch:
@@ -8,7 +8,7 @@ client/type-check/watch:
 
 # データベースのカラム変化を監視する
 server/watch:
-	npm run server/watch
+	npm run server:watch
 
 # データベースに変更したカラムを反映させる
 db/push:

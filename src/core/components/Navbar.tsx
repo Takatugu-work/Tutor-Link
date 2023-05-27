@@ -9,11 +9,13 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { LOGIN, REGISTER } from 'src/router/root';
+import { LOGIN, REGISTER, USER } from 'src/router/root';
 
 export function Navbar() {
   const user = useCurrentUser();
+  const router = useRouter();
   return (
     <>
       <AppBar position="static">
@@ -61,7 +63,12 @@ export function Navbar() {
             )}
             {user && (
               <Tooltip title="アカウント">
-                <IconButton size="large">
+                <IconButton
+                  size="large"
+                  onClick={async () => {
+                    await router.push(USER);
+                  }}
+                >
                   <AccountCircle />
                 </IconButton>
               </Tooltip>
