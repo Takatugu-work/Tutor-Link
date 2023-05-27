@@ -4,6 +4,7 @@ import db from 'db';
 import { StudentSchema, UserSchema } from 'db/schema';
 import { UserInput } from './userInput';
 import { Role } from 'types';
+import { z } from 'zod';
 
 export default async function createUserInformation(
   input: UserInput,

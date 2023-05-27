@@ -123,7 +123,7 @@ export const TeacherSchema = z.object({
   gender: z.string(),
   school: z.string(),
   price: z.string().nullable(),
-  prefecture: z.string().array(),
+  prefecture: z.string(),
   comment: z.string().nullable(),
   // omitted: createdAt: z.coerce.date(),
   // omitted: updatedAt: z.coerce.date(),

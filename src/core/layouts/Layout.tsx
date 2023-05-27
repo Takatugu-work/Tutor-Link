@@ -2,7 +2,6 @@ import Head from 'next/head';
 import React, { FC } from 'react';
 import { BlitzLayout } from '@blitzjs/next';
 import { Navbar } from '../components/Navbar';
-import { SnackbarProvider } from 'notistack';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from 'src/util/defaultTheme';
 
@@ -13,16 +12,14 @@ const Layout: BlitzLayout<{ title?: string; children?: React.ReactNode }> = ({
 }) => {
   return (
     <>
-      <SnackbarProvider>
-        <ThemeProvider theme={theme}>
-          <Head>
-            <title>Tutor Link</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <Navbar />
-          <main>{children}</main>
-        </ThemeProvider>
-      </SnackbarProvider>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>Tutor Link</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Navbar />
+        <main>{children}</main>
+      </ThemeProvider>
     </>
   );
 };

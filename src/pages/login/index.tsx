@@ -64,6 +64,12 @@ export default function Login() {
   > = async (data) => {
     try {
       await loginMutation(data);
+      enqueueSnackbar('ログインしました', {
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      });
       return router.push('/');
     } catch (error: any) {
       if (error instanceof AuthenticationError) {

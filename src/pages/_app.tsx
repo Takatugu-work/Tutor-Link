@@ -5,6 +5,7 @@ import {
   AppProps,
 } from '@blitzjs/next';
 import { AuthenticationError, AuthorizationError } from 'blitz';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import { withBlitz } from 'src/blitz-client';
 
@@ -31,9 +32,11 @@ function RootErrorFallback({ error }: ErrorFallbackProps) {
 function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
   return (
-    <ErrorBoundary FallbackComponent={RootErrorFallback}>
-      {getLayout(<Component {...pageProps} />)}
-    </ErrorBoundary>
+    <SnackbarProvider>
+      <ErrorBoundary FallbackComponent={RootErrorFallback}>
+        {getLayout(<Component {...pageProps} />)}
+      </ErrorBoundary>
+    </SnackbarProvider>
   );
 }
 

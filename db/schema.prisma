@@ -7,7 +7,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
 }
 
 generator zod {
@@ -56,7 +57,7 @@ model User {
 // 教師
 
 model Teacher {
-  id         String   @id @default(uuid()) /// @zod.custom.omit([model, input])
+  id         String   @id @unique @default(uuid()) /// @zod.custom.omit([model, input])
   // 名前
   name       String
   // 世代
@@ -70,20 +71,20 @@ model Teacher {
   // 値段
   price      String?
   // 住所
-  prefecture String[]
+  prefecture String
   // コメント
   comment    String?
   createdAt  DateTime @default(now()) /// @zod.custom.omit([model, input])
   updatedAt  DateTime @updatedAt /// @zod.custom.omit([model, input])
   // Userテーブル
   user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  userId     String   @unique
 }
 
 // 生徒
 
 model Student {
-  id         String   @id @default(uuid()) /// @zod.custom.omit([model, input])
+  id         String   @id @unique @default(uuid()) /// @zod.custom.omit([model, input])
   // 名前
   name       String
   // 学年
@@ -102,7 +103,7 @@ model Student {
   updatedAt  DateTime @updatedAt /// @zod.custom.omit([model, input])
   // Userテーブル
   user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  userId     String   @unique
 }
 
 model Session {

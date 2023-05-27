@@ -20,8 +20,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import Layout from 'src/core/layouts/Layout';
 import createUserInformation from 'src/server/resolver/mutations/user/user.resolver';
 import { z } from 'zod';
@@ -52,9 +52,6 @@ export default function Register() {
     { isLoading: createUserInformationMutationProgress },
   ] = useMutation(createUserInformation);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [userRole, setUserRole] = useState<{ role: 'STUDENT' | 'TEACHER' }>({
-    role: 'STUDENT',
-  });
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -77,11 +74,14 @@ export default function Register() {
       subject: [],
     },
   });
+  const userRole = useWatch({
+    control,
+    name: 'role',
+  });
 
   const saveUserInformation: SubmitHandler<z.infer<typeof formSchema>> = async (
     data
   ) => {
-    console.log(data);
     try {
       await createUserInformationMutation(data);
       enqueueSnackbar('登録が完了しました', {
@@ -117,7 +117,6 @@ export default function Register() {
   };
 
   const isLoading = createUserInformationMutationProgress;
-
   return (
     <Layout>
       <Box sx={{ width: '540px', margin: '0 auto' }}>
@@ -154,7 +153,7 @@ export default function Register() {
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth>
                     <InputLabel>性別</InputLabel>
-                    <Select {...field} label="性別">
+                    <Select label="性別" {...field}>
                       <MenuItem value={'MAN'}>男性</MenuItem>
                       <MenuItem value={'WOMEN'}>女性</MenuItem>
                     </Select>
@@ -208,7 +207,7 @@ export default function Register() {
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth>
-                    <InputLabel>お住まいの都道府県</InputLabel>
+                    <InputLabel>都道府県</InputLabel>
                     <Select {...field} label="都道府県">
                       <MenuItem value="北海道">北海道</MenuItem>
                       <MenuItem value="青森県">青森県</MenuItem>
@@ -262,7 +261,7 @@ export default function Register() {
                   </FormControl>
                 )}
               />
-              {userRole.role === 'STUDENT' ? (
+              {userRole === 'STUDENT' ? (
                 <>
                   <Controller
                     name="school"
