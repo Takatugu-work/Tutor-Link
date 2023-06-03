@@ -37,8 +37,10 @@ export default function User() {
   ] = useMutation(UpdateUserDataAccordingToRole);
   const [isEditUserDialogOpen, setIsEditUserDialogOpen] =
     useState<boolean>(false);
-  const [logoutMutation, { isLoading: logoutMutationProgress }] =
-    useMutation(logout);
+  const [
+    logoutMutation,
+    { isLoading: logoutMutationProgress, isSuccess: isULogoutUserSuccess },
+  ] = useMutation(logout);
 
   if (!userMasterData || userMasterDataProgress) return <LinearProgress />;
   return (
@@ -122,7 +124,9 @@ export default function User() {
                     horizontal: 'center',
                   },
                 });
-                void router.push('/');
+                if (isULogoutUserSuccess) {
+                  void router.push('/');
+                }
               } catch (error: any) {
                 enqueueSnackbar(
                   'ログアウトに失敗しました。もう一度お試しください',
@@ -189,7 +193,9 @@ export default function User() {
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={
-          updateUerInformationAccordingToRoleProgress || logoutMutationProgress
+          updateUerInformationAccordingToRoleProgress ||
+          logoutMutationProgress ||
+          isULogoutUserSuccess
         }
       >
         <CircularProgress color="inherit" />
