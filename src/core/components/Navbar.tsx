@@ -11,13 +11,13 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { LOGIN, REGISTER, USER } from 'src/router/root';
+import { LOGIN, REGISTER, SEARCHTEACHER, USER } from 'src/router/root';
 
 export function Navbar() {
   const user = useCurrentUser();
   const router = useRouter();
   return (
-    <>
+    <Box mb={5}>
       <AppBar position="static">
         <Toolbar>
           <Typography
@@ -30,12 +30,20 @@ export function Navbar() {
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {user ? (
               user.role === 'STUDENT' && (
-                <Button component={Link} href={REGISTER} sx={{ color: '#fff' }}>
+                <Button
+                  component={Link}
+                  href={SEARCHTEACHER}
+                  sx={{ color: '#fff' }}
+                >
                   先生を探す
                 </Button>
               )
             ) : (
-              <Button component={Link} href={REGISTER} sx={{ color: '#fff' }}>
+              <Button
+                component={Link}
+                href={SEARCHTEACHER}
+                sx={{ color: '#fff' }}
+              >
                 先生を探す
               </Button>
             )}
@@ -76,6 +84,6 @@ export function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
-    </>
+    </Box>
   );
 }

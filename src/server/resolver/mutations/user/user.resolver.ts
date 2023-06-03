@@ -1,7 +1,12 @@
 import { SecurePassword } from '@blitzjs/auth/secure-password';
 import { Ctx } from 'blitz';
 import db from 'db';
-import { StudentSchema, UserSchema } from 'db/schema';
+import {
+  StudentSchema,
+  TeacherScalarFieldEnumSchema,
+  TeacherSchema,
+  UserSchema,
+} from 'db/schema';
 import { UserInput } from './userInput';
 import { Role } from 'types';
 import { z } from 'zod';
@@ -37,6 +42,19 @@ export default async function createUserInformation(
       userId: userInformation.id,
     });
     await db.student.create({ data: studentData });
+  } else {
+    const teacherData = TeacherSchema.parse({
+      name: input.name,
+      age: input.age,
+      subject: input.subject,
+      gender: input.gender,
+      school: input.school,
+      price: null,
+      prefecture: input.prefecture,
+      comment: input.comment,
+      userId: userInformation.id,
+    });
+    await db.teacher.create({ data: teacherData });
   }
 
   const createdUserData = await db.user.findFirstOrThrow({

@@ -1,3 +1,4 @@
 export const REGISTER = '/register';
 export const LOGIN = '/login';
 export const USER = '/user';
+export const SEARCHTEACHER = '/searchTeacher';

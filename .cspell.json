@@ -11,7 +11,10 @@
     "behaviour",
     "tsbuildinfo",
     "datasource",
-    "Bitstream"
+    "Bitstream",
+    "SEARCHSTUDENT",
+    "SEARCHTEACHER",
+    "Overridable"
   ],
   "ignorePaths": [
     ".vscode",
