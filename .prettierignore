@@ -2,7 +2,7 @@
 .env*
 *.ico
 *.lock
-db
+db/schema
 .next
 .yarn
 .pnp.*

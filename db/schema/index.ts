@@ -10,6 +10,14 @@ import type { Prisma } from '@prisma/client';
 // ENUMS
 /////////////////////////////////////////
 
+export const ChatOrderByRelevanceFieldEnumSchema = z.enum(['id','teacherId','studentId','lastMessage']);
+
+export const ChatScalarFieldEnumSchema = z.enum(['id','teacherId','studentId','lastMessage','lastMessageTimestamp','createdAt','updatedAt']);
+
+export const MessageOrderByRelevanceFieldEnumSchema = z.enum(['id','chatId','senderId','contnent']);
+
+export const MessageScalarFieldEnumSchema = z.enum(['id','chatId','senderId','contnent']);
+
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const SessionOrderByRelevanceFieldEnumSchema = z.enum(['id','handle','hashedSessionToken','antiCSRFToken','publicData','privateData','userId']);
@@ -104,6 +112,35 @@ export const StudentSchema = z.object({
 })
 
 export type Student = z.infer<typeof StudentSchema>
+
+/////////////////////////////////////////
+// CHAT SCHEMA
+/////////////////////////////////////////
+
+export const ChatSchema = z.object({
+  // omitted: id: z.string().uuid(),
+  teacherId: z.string(),
+  studentId: z.string(),
+  lastMessage: z.string(),
+  lastMessageTimestamp: z.coerce.date().nullable(),
+  // omitted: createdAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date(),
+})
+
+export type Chat = z.infer<typeof ChatSchema>
+
+/////////////////////////////////////////
+// MESSAGE SCHEMA
+/////////////////////////////////////////
+
+export const MessageSchema = z.object({
+  // omitted: id: z.string().uuid(),
+  chatId: z.string(),
+  senderId: z.string(),
+  contnent: z.string(),
+})
+
+export type Message = z.infer<typeof MessageSchema>
 
 /////////////////////////////////////////
 // SESSION SCHEMA

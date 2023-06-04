@@ -8,7 +8,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["extendedWhereUnique","fullTextSearch"]
+  previewFeatures = ["extendedWhereUnique", "fullTextSearch"]
 }
 
 generator zod {
@@ -52,6 +52,7 @@ model User {
   tokens    Token[]
   createdAt DateTime  @default(now()) /// @zod.custom.omit([model, input])
   updatedAt DateTime  @updatedAt /// @zod.custom.omit([model, input])
+  Message   Message[]
 }
 
 // 教師
@@ -79,6 +80,8 @@ model Teacher {
   // Userテーブル
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @unique
+  // Chat テーブルとのリレーション
+  chat       Chat[]
 }
 
 // 生徒
@@ -104,6 +107,36 @@ model Student {
   // Userテーブル
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @unique
+  Chat       Chat[]
+}
+
+model Chat {
+  id                   String    @id @default(uuid()) /// @zod.custom.omit([model, input])
+  // 教師
+  teacher              Teacher   @relation(fields: [teacherId], references: [id])
+  teacherId            String
+  // 生徒
+  student              Student   @relation(fields: [studentId], references: [id])
+  studentId            String
+  // 最後のチャット
+  lastMessage          String
+  // 最後のチャットの時間
+  lastMessageTimestamp DateTime?
+  createdAt            DateTime  @default(now()) /// @zod.custom.omit([model, input])
+  updatedAt            DateTime  @updatedAt /// @zod.custom.omit([model, input])
+  Message              Message[]
+}
+
+model Message {
+  id       String @id @default(uuid()) /// @zod.custom.omit([model, input])
+  // チャット
+  chat     Chat   @relation(fields: [chatId], references: [id])
+  chatId   String
+  // 送信者
+  sender   User   @relation(fields: [senderId], references: [id])
+  senderId String
+  // チャットの内容
+  contnent String
 }
 
 model Session {

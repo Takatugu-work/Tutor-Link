@@ -65,6 +65,7 @@ export default function Login() {
     try {
       await loginMutation(data);
       enqueueSnackbar('ログインしました', {
+        variant: 'success',
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'center',
