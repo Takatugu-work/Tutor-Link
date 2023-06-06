@@ -4,6 +4,7 @@ import {
   ErrorBoundary,
   AppProps,
 } from '@blitzjs/next';
+import { CssBaseline } from '@mui/material';
 import { AuthenticationError, AuthorizationError } from 'blitz';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
@@ -33,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
   return (
     <SnackbarProvider>
+      <CssBaseline />
       <ErrorBoundary FallbackComponent={RootErrorFallback}>
         {getLayout(<Component {...pageProps} />)}
       </ErrorBoundary>

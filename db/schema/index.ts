@@ -14,9 +14,9 @@ export const ChatOrderByRelevanceFieldEnumSchema = z.enum(['id','teacherId','stu
 
 export const ChatScalarFieldEnumSchema = z.enum(['id','teacherId','studentId','lastMessage','lastMessageTimestamp','createdAt','updatedAt']);
 
-export const MessageOrderByRelevanceFieldEnumSchema = z.enum(['id','chatId','senderId','contnent']);
+export const MessageOrderByRelevanceFieldEnumSchema = z.enum(['id','chatId','senderId','content']);
 
-export const MessageScalarFieldEnumSchema = z.enum(['id','chatId','senderId','contnent']);
+export const MessageScalarFieldEnumSchema = z.enum(['id','chatId','senderId','content','createdAt','updatedAt']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
@@ -67,7 +67,7 @@ export const UserSchema = z.object({
   password: z.string(),
   role: z.string(),
   // omitted: createdAt: z.coerce.date(),
-  // omitted: updatedAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date().nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -87,7 +87,7 @@ export const TeacherSchema = z.object({
   prefecture: z.string(),
   comment: z.string().nullable(),
   // omitted: createdAt: z.coerce.date(),
-  // omitted: updatedAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date().nullable(),
   userId: z.string(),
 })
 
@@ -107,7 +107,7 @@ export const StudentSchema = z.object({
   gender: z.string(),
   comment: z.string().nullable(),
   // omitted: createdAt: z.coerce.date(),
-  // omitted: updatedAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date().nullable(),
   userId: z.string(),
 })
 
@@ -124,7 +124,7 @@ export const ChatSchema = z.object({
   lastMessage: z.string(),
   lastMessageTimestamp: z.coerce.date().nullable(),
   // omitted: createdAt: z.coerce.date(),
-  // omitted: updatedAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date().nullable(),
 })
 
 export type Chat = z.infer<typeof ChatSchema>
@@ -137,7 +137,9 @@ export const MessageSchema = z.object({
   // omitted: id: z.string().uuid(),
   chatId: z.string(),
   senderId: z.string(),
-  contnent: z.string(),
+  content: z.string(),
+  // omitted: createdAt: z.coerce.date(),
+  // omitted: updatedAt: z.coerce.date().nullable(),
 })
 
 export type Message = z.infer<typeof MessageSchema>

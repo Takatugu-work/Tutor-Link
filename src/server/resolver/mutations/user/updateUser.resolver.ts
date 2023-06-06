@@ -48,14 +48,23 @@ export default async function UpdateUserDataAccordingToRole(
         userId: session.userId,
       },
     });
-    const data = StudentSchema.parse(input);
-    await db.student.update({
+    const data = z
+      .object({
+        name: z.string(),
+        school: z.string(),
+        prefecture: z.string(),
+        age: z.string(),
+        subject: z.string().array(),
+        gender: z.string(),
+        comment: z.string().nullable(),
+      })
+      .parse(input);
+    await db.teacher.update({
       where: {
         id: teacher.id,
       },
       data,
     });
-
     return true;
   }
 }

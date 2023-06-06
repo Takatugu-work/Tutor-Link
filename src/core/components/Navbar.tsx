@@ -11,14 +11,21 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { CHAT, LOGIN, REGISTER, SEARCHTEACHER, USER } from 'src/router/root';
+import {
+  CHAT,
+  LOGIN,
+  REGISTER,
+  SEARCHSTUDENT,
+  SEARCHTEACHER,
+  USER,
+} from 'src/router/root';
 
 export function Navbar() {
   const user = useCurrentUser();
   const router = useRouter();
   return (
-    <Box mb={5}>
-      <AppBar position="static">
+    <Box>
+      <AppBar component="nav" position="relative">
         <Toolbar>
           <Typography
             variant="h6"
@@ -40,7 +47,7 @@ export function Navbar() {
                   </Button>
                   <Button
                     component={Link}
-                    href={REGISTER}
+                    href={SEARCHSTUDENT}
                     sx={{ color: '#fff' }}
                   >
                     生徒を探す
@@ -72,7 +79,7 @@ export function Navbar() {
                 <>
                   <Button
                     component={Link}
-                    href={REGISTER}
+                    href={SEARCHSTUDENT}
                     sx={{ color: '#fff' }}
                   >
                     生徒を探す
@@ -90,7 +97,11 @@ export function Navbar() {
                 </>
               )
             ) : (
-              <Button component={Link} href={REGISTER} sx={{ color: '#fff' }}>
+              <Button
+                component={Link}
+                href={SEARCHSTUDENT}
+                sx={{ color: '#fff' }}
+              >
                 生徒を探す
               </Button>
             )}
