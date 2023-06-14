@@ -24,4 +24,12 @@ export default async function sendMessage(
       content: input.message,
     },
   });
+  await db.chat.update({
+    where: {
+      id: input.chatId,
+    },
+    data: {
+      lastMessage: input.message,
+    },
+  });
 }

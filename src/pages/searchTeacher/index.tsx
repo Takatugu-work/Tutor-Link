@@ -48,31 +48,33 @@ export default function SearchTeacher() {
   if (!getUserQuery) return <LinearProgress />;
   return (
     <Layout>
-      <Box
-        sx={{
-          ...borderStyle,
-          borderColor: 'primary.main',
-          width: '800px',
-          margin: '0 auto',
-        }}
-      >
-        <BottomNavigation
-          showLabels
-          value={searchTagValue}
-          onChange={(_, newValue: string) => {
-            if (newValue === searchTagValue) {
-              setSearchTagValue('');
-            } else {
-              setSearchDialogState({ open: true, searchTarget: newValue });
-            }
+      <Box mt={5}>
+        <Box
+          sx={{
+            ...borderStyle,
+            borderColor: 'primary.main',
+            width: '800px',
+            margin: '0 auto',
           }}
         >
-          <BottomNavigationAction label="学歴" icon={<School />} />
-          <BottomNavigationAction label="科目" icon={<ImportContacts />} />
-          <BottomNavigationAction label="地域" icon={<LocationOn />} />
-          <BottomNavigationAction label="授業料" icon={<CurrencyYen />} />
-          <BottomNavigationAction label="性別" icon={<Person />} />
-        </BottomNavigation>
+          <BottomNavigation
+            showLabels
+            value={searchTagValue}
+            onChange={(_, newValue: string) => {
+              if (newValue === searchTagValue) {
+                setSearchTagValue('');
+              } else {
+                setSearchDialogState({ open: true, searchTarget: newValue });
+              }
+            }}
+          >
+            <BottomNavigationAction label="学歴" icon={<School />} />
+            <BottomNavigationAction label="科目" icon={<ImportContacts />} />
+            <BottomNavigationAction label="地域" icon={<LocationOn />} />
+            <BottomNavigationAction label="授業料" icon={<CurrencyYen />} />
+            <BottomNavigationAction label="性別" icon={<Person />} />
+          </BottomNavigation>
+        </Box>
       </Box>
       <Box mt={5}>
         <Stack

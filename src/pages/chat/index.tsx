@@ -4,8 +4,6 @@ import {
   Backdrop,
   Box,
   Button,
-  Card,
-  CardContent,
   CircularProgress,
   Divider,
   LinearProgress,
@@ -88,10 +86,9 @@ export default function ChatPage() {
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2" color="text.secondary">
-                          {format(
-                            chat.lastMessageTimestamp,
-                            'yyyy/MM/dd/hh:mm'
-                          )}
+                          {chat.updatedAt
+                            ? format(chat.updatedAt, 'yyyy/MM/dd hh:mm')
+                            : ''}
                         </Typography>
                       </Fragment>
                     }

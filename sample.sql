@@ -1,4 +1,5 @@
 START TRANSACTION;
+
 INSERT INTO public."User"(id,name,email,password,role) VALUES ('9a4fabd2-cae9-42fe-aa4b-3d2efe5aa95d','山田太朗','yamadatarou@yamadatarou.com','JGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTIscD0xJG5SQVlQdE8vRGV3SVlJWWtuYnpjbEEkMmowa1A3NjVOZnVjT0lxNTE4UHNRbExrdEpTOWdiTnhjSG9SRkpXb295SQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=','TEACHER'),
 ('7a1e529e-ae7f-4ea3-9492-c0d85f71684d','佐藤太郎','satoutarou@satoutarou.com','JGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTIscD0xJGdNSkttbVR5b0RmNmJGcG9wakZLalEkR2ZlM2lnVk9Pb3pnYStCYUFVUFhzd1ljM1pDVkJHaVdtblJQTHYwaE1qRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=','TEACHER'),
 ('167c2886-35c3-4b9f-8fb9-0c8dfe07a261','田中太郎','tanakatarou@tanakatarou.com','JGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTIscD0xJC9yL1oyV2hHU1Q1UnFVaDUzcHlXZWckLzVQaWYzOWZsQ2FwSUc5Vkt1bXMyM0VqQmZ2ZDNuSmZmZzBpKzZ2cVNmSQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=','TEACHER'),
@@ -19,3 +20,5 @@ INSERT INTO public."Student"(id,name,school,prefecture,age,subject,gender,commen
 INSERT INTO public."Chat"("id","teacherId","studentId","lastMessage","lastMessageTimestamp") VALUES ('e15ee9b6-e8a0-4a0f-947f-e9660ca76f39','7a7f2603-7cea-4a02-bcdc-f4714ce02cff','266f0c8f-a1de-4983-86e6-603501acbb29','初めまして山田と申します','2023-06-06 20:37:36.962');
 
 INSERT INTO public."Message"("id","chatId","senderId","content") VALUES ('029bc422-5a93-4c2c-ad9b-a26c3d53432d','e15ee9b6-e8a0-4a0f-947f-e9660ca76f39','7a1e529e-ae7f-4ea3-9492-c0d85f71684d','こんにちは');
+
+COMMIT
