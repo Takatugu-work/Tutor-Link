@@ -121,7 +121,7 @@ export const ChatSchema = z.object({
   // omitted: id: z.string().uuid(),
   teacherId: z.string(),
   studentId: z.string(),
-  lastMessage: z.string(),
+  lastMessage: z.string().nullable(),
   lastMessageTimestamp: z.coerce.date().nullable(),
   // omitted: createdAt: z.coerce.date(),
   // omitted: updatedAt: z.coerce.date().nullable(),

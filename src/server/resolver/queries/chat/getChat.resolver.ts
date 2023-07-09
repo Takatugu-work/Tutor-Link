@@ -16,7 +16,7 @@ export default async function getChat(_ = null, ctx: Ctx) {
         studentId: student.id,
       },
       include: {
-        student: true,
+        teacher: true,
       },
     });
     return studentChatData;
@@ -32,7 +32,7 @@ export default async function getChat(_ = null, ctx: Ctx) {
         teacherId: teacher.id,
       },
       include: {
-        teacher: true,
+        student: true,
       },
     });
 

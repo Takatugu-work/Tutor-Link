@@ -21,9 +21,10 @@ import {
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import Layout from 'src/core/layouts/Layout';
-import getTeacher from 'src/server/resolver/queries/teacher/getTeacher.resolver';
+import getTeachers from 'src/server/resolver/queries/teacher/getTeachers.resolver';
 import SearchDialog from './components/SearchDialog';
-import SearchResult from './searchResult';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const borderStyle = {
   bgcolor: 'background.paper',
@@ -32,13 +33,15 @@ const borderStyle = {
 };
 
 export default function SearchTeacher() {
+  const router = useRouter();
+
   const [searchTagValue, setSearchTagValue] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string | Array<string>>();
   const [searchDialogState, setSearchDialogState] = useState<
     { open: false } | { open: true; searchTarget: string }
   >({ open: false });
   const [getUserQuery, { isLoading }] = useQuery(
-    getTeacher,
+    getTeachers,
     {
       searchColumn: searchTagValue.toString(),
       searchColumnValue: searchValue ?? '',
@@ -87,7 +90,7 @@ export default function SearchTeacher() {
         >
           {getUserQuery.map((teacher) => (
             <Fragment key={teacher.id}>
-              <Card sx={{ width: 425, backgroundColor: '#E8FBFF' }}>
+              <Card sx={{ width: 425, backgroundColor: '#f5f5f5' }}>
                 <CardContent>
                   <Typography variant="h6" textAlign="center">
                     {teacher.name}
@@ -107,7 +110,16 @@ export default function SearchTeacher() {
                     </Stack>
                   </Stack>
                   <Box mt={5} sx={{ textAlign: 'center' }}>
-                    <Button variant="contained" sx={{ textAlign: 'center' }}>
+                    <Button
+                      variant="outlined"
+                      sx={{ textAlign: 'center' }}
+                      onClick={() =>
+                        router.push({
+                          pathname: 'teacherDetail',
+                          query: { teacherId: teacher.id },
+                        })
+                      }
+                    >
                       先生の詳細を見る
                     </Button>
                   </Box>

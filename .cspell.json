@@ -14,7 +14,8 @@
     "Bitstream",
     "SEARCHSTUDENT",
     "SEARCHTEACHER",
-    "Overridable"
+    "Overridable",
+    "Swipeable"
   ],
   "ignorePaths": [
     ".vscode",

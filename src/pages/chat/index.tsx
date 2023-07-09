@@ -3,7 +3,6 @@ import { AccountCircle } from '@mui/icons-material';
 import {
   Backdrop,
   Box,
-  Button,
   CircularProgress,
   Divider,
   LinearProgress,
@@ -12,20 +11,23 @@ import {
   ListItemAvatar,
   ListItemText,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 import Layout from 'src/core/layouts/Layout';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import sendMessage from 'src/server/resolver/mutations/message/sendMessage.resolver';
 import getChat from 'src/server/resolver/queries/chat/getChat.resolver';
 import getMessage from 'src/server/resolver/queries/message/getMessage.resolver';
+import ChatDetail from './components/chatDetail';
 
 export default function ChatPage() {
+  const router = useRouter();
+  const chatId = router.query.chatId as string | null;
   const currentUser = useCurrentUser();
-  const [clickedChatId, setClickedChatId] = useState<string>('');
+  const [clickedChatId, setClickedChatId] = useState<string>(chatId ?? '');
   const [inputtedMessage, setInputtedMessage] = useState<string>('');
 
   const [
@@ -59,9 +61,12 @@ export default function ChatPage() {
               <Fragment key={chat.id}>
                 <ListItem
                   sx={{ cursor: 'pointer' }}
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.preventDefault();
                     setClickedChatId(chat.id);
+                    await router.push({
+                      query: { chatId: chat.id },
+                    });
                   }}
                 >
                   <ListItemAvatar>
@@ -70,8 +75,8 @@ export default function ChatPage() {
                   <ListItemText
                     primary={
                       currentUser.role === 'STUDENT'
-                        ? chat.student.name
-                        : chat.teacher.name
+                        ? chat.teacher.name
+                        : chat.student.name
                     }
                     secondary={
                       <Fragment>
@@ -99,90 +104,26 @@ export default function ChatPage() {
             ))}
           </List>
         </Box>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateRows: '1fr max-content',
-            backgroundColor: '#FFFFFB',
-            height: '93.2vh',
-            width: '100vw',
-          }}
-        >
-          <Box sx={{ overflowY: 'scroll' }}>
-            <List>
-              {getMessageQuery
-                ? getMessageQuery.map((message) => (
-                    <Fragment key={message.id}>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <AccountCircle sx={{ fontSize: 50 }} />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={
-                            <Fragment>
-                              <Stack direction="row" spacing={3}>
-                                <Typography
-                                  sx={{ display: 'inline' }}
-                                  component="span"
-                                  variant="body2"
-                                  color="text.primary"
-                                >
-                                  {message.sender.name}
-                                </Typography>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="text.secondary"
-                                >
-                                  {format(
-                                    message.createdAt,
-                                    'yyyy/MM/dd/hh:mm'
-                                  )}
-                                </Typography>
-                              </Stack>
-                            </Fragment>
-                          }
-                          secondary={message.content}
-                        />
-                      </ListItem>
-                      <Divider />
-                    </Fragment>
-                  ))
-                : null}
-            </List>
-          </Box>
-          <Divider />
-          <Stack direction="row" justifyContent="center" spacing={2} my={2}>
-            <Divider />
-            <TextField
-              value={inputtedMessage}
-              onChange={(e) => setInputtedMessage(e.target.value)}
-              required
-              sx={{ width: '70%' }}
-            />
-            <Button
-              onClick={async () => {
-                await sendMessageMutation({
-                  chatId: clickedChatId,
-                  senderId: currentUser.id,
-                  message: inputtedMessage,
-                });
-                if (sendMessageSuccess) {
-                  await chatRefetch();
-                  await messageRefetch();
-                  setInputtedMessage('');
-                }
-              }}
-              disabled={
-                !clickedChatId ||
-                !inputtedMessage ||
-                sendMessageMutationProgress
+        {getMessageQuery && (
+          <ChatDetail
+            isLoading={sendMessageMutationProgress}
+            messages={getMessageQuery}
+            inputtedMessage={inputtedMessage}
+            setInputtedMessage={setInputtedMessage}
+            sendMessage={async () => {
+              await sendMessageMutation({
+                chatId: clickedChatId,
+                senderId: currentUser.id,
+                message: inputtedMessage,
+              });
+              if (sendMessageSuccess) {
+                await chatRefetch();
+                await messageRefetch();
+                setInputtedMessage('');
               }
-              variant="contained"
-            >
-              送信
-            </Button>
-          </Stack>
-        </Box>
+            }}
+          />
+        )}
       </Stack>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

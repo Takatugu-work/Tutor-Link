@@ -39,7 +39,7 @@ export default function User() {
     useState<boolean>(false);
   const [
     logoutMutation,
-    { isLoading: logoutMutationProgress, isSuccess: isULogoutUserSuccess },
+    { isLoading: logoutMutationProgress, isSuccess: isLogoutUserSuccess },
   ] = useMutation(logout);
 
   if (!userMasterData || userMasterDataProgress) return <LinearProgress />;
@@ -124,9 +124,7 @@ export default function User() {
                     horizontal: 'center',
                   },
                 });
-                if (isULogoutUserSuccess) {
-                  void router.push('/');
-                }
+                void router.push('/');
               } catch (error: any) {
                 enqueueSnackbar(
                   'ログアウトに失敗しました。もう一度お試しください',
@@ -195,7 +193,7 @@ export default function User() {
         open={
           updateUerInformationAccordingToRoleProgress ||
           logoutMutationProgress ||
-          isULogoutUserSuccess
+          isLogoutUserSuccess
         }
       >
         <CircularProgress color="inherit" />

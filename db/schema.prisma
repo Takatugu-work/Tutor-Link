@@ -119,7 +119,7 @@ model Chat {
   student              Student   @relation(fields: [studentId], references: [id])
   studentId            String
   // 最後のチャット
-  lastMessage          String
+  lastMessage          String?
   // 最後のチャットの時間
   lastMessageTimestamp DateTime?
   createdAt            DateTime  @default(now()) /// @zod.custom.omit([model, input])

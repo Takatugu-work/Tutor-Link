@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CurrencyYen,
   ImportContacts,
@@ -21,8 +20,6 @@ import {
   Typography,
 } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 interface DialogValueInfo {
   icon: React.ReactNode;
