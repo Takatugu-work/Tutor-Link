@@ -20,9 +20,10 @@ import {
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Assignment, Student, Teacher } from '@prisma/client';
 import { addDays, format } from 'date-fns';
 import { useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Layout from 'src/core/layouts/Layout';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import createAssignment from 'src/server/resolver/mutations/assignment/createAssignment.resolver';
@@ -55,33 +56,49 @@ export default function AssignmentPage() {
   const [assignmentDateForDialogState, setAssignmentDateForDialogState] =
     useState<string>('');
 
-  const { register, handleSubmit, control, formState } = useForm<
-    z.infer<typeof formSchema>
-  >({ resolver: zodResolver(formSchema) });
-  const [getAssignmentQuery, { isLoading: getAssignmentQueryProgress }] =
-    useQuery(getAssignment, null, { suspense: false });
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+  const [
+    getAssignmentQuery,
+    {
+      isLoading: getAssignmentQueryProgress,
+      refetch: getAssignmentQueryRefetch,
+    },
+  ] = useQuery(getAssignment, null, { suspense: false });
   const [
     createAssignmentMutation,
     { isLoading: createAssignmentMutationProgress },
   ] = useMutation(createAssignment);
-  const assignmentMapByDate = useMemo(() => {
-    getAssignmentQuery?.reduce((map, cur) => {
-      const list: Object[] = [];
-      if (map.get(cur.deadline)) {
-        list.push(cur);
-        return map.set(cur.deadline, list);
-      }
+  if (!authorizedUser || !getAssignmentQuery) {
+    return <LinearProgress />;
+  }
+  const assignmentMapByDate = getAssignmentQuery.reduce(
+    (map, cur) => {
+      const key = cur.deadline;
+      const list: (Assignment & {
+        teacher: Teacher;
+        student: Student;
+      })[] = map.get(key) ?? [];
       list.push(cur);
-      return map.set(cur.deadline, list);
-    }, new Map());
-  }, []);
+      return map.set(key, list);
+    },
+    new Map<
+      string,
+      (Assignment & {
+        teacher: Teacher;
+        student: Student;
+      })[]
+    >()
+  );
 
   const isLoading =
     createAssignmentMutationProgress || getAssignmentQueryProgress;
-
-  if (!authorizedUser) {
-    return <LinearProgress />;
-  }
 
   return (
     <Layout>
@@ -106,7 +123,6 @@ export default function AssignmentPage() {
             );
           })}
         </Stack>
-        <Divider />
         <Box mt={4}>
           <Typography variant="h5">期限切れ</Typography>
         </Box>
@@ -119,30 +135,44 @@ export default function AssignmentPage() {
                   <Typography variant="h6" color="text.secondary">
                     {format(addDays(new Date(), index), 'MM月dd日')}・{week}曜日
                   </Typography>
-                  <Divider />
                   <List>
-                    <ListItem>
-                      <Stack>
-                        <Stack
-                          direction="row"
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <Checkbox size="medium" />
-                          <Typography variant="h6">
-                            英語ワーク５ページ
-                          </Typography>
-                          <Stack ml={2} direction="row">
-                            <AccountCircle />
-                            <Typography>佐藤太郎 先生</Typography>
-                          </Stack>
-                        </Stack>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          コメント：
-                        </Typography>
-                      </Stack>
-                    </ListItem>
-                    <Divider />
+                    {assignmentMapByDate
+                      .get(format(addDays(new Date(), index), 'yyyy/MM/dd'))
+                      ?.map((assignment) => {
+                        return (
+                          <>
+                            <Divider />
+                            <ListItem key={assignment.id}>
+                              <Stack>
+                                <Stack
+                                  direction="row"
+                                  justifyContent="center"
+                                  alignItems="center"
+                                >
+                                  <Checkbox size="medium" />
+                                  <Typography variant="h6">
+                                    {assignment.title}
+                                  </Typography>
+                                  <Stack ml={2} direction="row">
+                                    <AccountCircle />
+                                    <Typography>
+                                      {authorizedUser.role === 'TEACHER'
+                                        ? '自分'
+                                        : assignment.student.name}
+                                    </Typography>
+                                  </Stack>
+                                </Stack>
+                                <Typography
+                                  variant="subtitle2"
+                                  color="text.secondary"
+                                >
+                                  コメント：{assignment.content}
+                                </Typography>
+                              </Stack>
+                            </ListItem>
+                          </>
+                        );
+                      })}
                   </List>
                   {authorizedUser.role === 'TEACHER' && (
                     <Button
@@ -178,6 +208,7 @@ export default function AssignmentPage() {
                   <DatePicker
                     {...field}
                     value={new Date(assignmentDateForDialogState)}
+                    format="yyyy/MM/dd"
                   />
                 )}
               />
@@ -194,18 +225,21 @@ export default function AssignmentPage() {
               キャンセル
             </Button>
             <Button
-              onClick={handleSubmit(async (data) => {
-                console.log(data);
-                await createAssignmentMutation({
-                  userId: authorizedUser.id,
-                  studentId: '266f0c8f-a1de-4983-86e6-603501acbb29',
-                  title: data.title,
-                  content: data.content,
-                  deadline: data.deadline,
-                  isDone: false,
-                });
-              })}
-              // disabled={!formState.isValid}
+              onClick={handleSubmit(
+                async (data: z.infer<typeof formSchema>) => {
+                  console.log(data);
+                  await createAssignmentMutation({
+                    userId: authorizedUser.id,
+                    studentId: '266f0c8f-a1de-4983-86e6-603501acbb29',
+                    title: data.title,
+                    content: data.content,
+                    deadline: data.deadline,
+                    isDone: false,
+                  });
+                  await getAssignmentQueryRefetch();
+                  setOpenAssignmentDialog(false);
+                }
+              )}
               variant="contained"
             >
               送信

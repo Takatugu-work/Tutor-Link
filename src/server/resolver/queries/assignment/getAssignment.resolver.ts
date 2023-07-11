@@ -5,7 +5,7 @@ import db from 'db';
 function sevenDaysFromToday(): string[] {
   const days: string[] = [];
   for (let i = 0; i < 7; i++) {
-    days.push(format(addDays(new Date(), i), 'yyyy年MM月dd日'));
+    days.push(format(addDays(new Date(), i), 'yyyy/MM/dd'));
   }
 
   return days;
@@ -25,6 +25,10 @@ export default async function getAssignment(_ = null, ctx: Ctx) {
         teacherId: teacher.id,
         deadline: { in: sevenDaysFromToday() },
       },
+      include: {
+        teacher: true,
+        student: true,
+      },
     });
   }
   const student = await db.student.findUniqueOrThrow({
@@ -36,6 +40,10 @@ export default async function getAssignment(_ = null, ctx: Ctx) {
     where: {
       studentId: student.id,
       deadline: { in: sevenDaysFromToday() },
+    },
+    include: {
+      teacher: true,
+      student: true,
     },
   });
 }

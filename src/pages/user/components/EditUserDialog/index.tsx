@@ -53,7 +53,6 @@ export default function EditUserDataDialog(props: {
   });
 
   const updateUerInformationAccordingToRole = handleSubmit(async (data) => {
-    console.log(data);
     try {
       await props.onUpdate(data);
       enqueueSnackbar('登録情報を更新しました', {
