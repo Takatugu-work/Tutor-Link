@@ -42,4 +42,4 @@ INSERT INTO public."Chat"("id","teacherId","studentId","lastMessage","lastMessag
 
 INSERT INTO public."Message"("id","chatId","senderId","content") VALUES ('029bc422-5a93-4c2c-ad9b-a26c3d53432d','e15ee9b6-e8a0-4a0f-947f-e9660ca76f39','7a1e529e-ae7f-4ea3-9492-c0d85f71684d','こんにちは');
 
-COMMIT
+COMMIT;

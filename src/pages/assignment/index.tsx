@@ -1,14 +1,18 @@
-import { useMutation } from '@blitzjs/rpc';
+import { useMutation, useQuery } from '@blitzjs/rpc';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AccountCircle, Add } from '@mui/icons-material';
 import {
+  Backdrop,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  LinearProgress,
   List,
   ListItem,
   Stack,
@@ -17,9 +21,13 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { addDays, format } from 'date-fns';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import Layout from 'src/core/layouts/Layout';
+import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import createAssignment from 'src/server/resolver/mutations/assignment/createAssignment.resolver';
+import getAssignment from 'src/server/resolver/queries/assignment/getAssignment.resolver';
+import { z } from 'zod';
 
 function getListOfWeeks(): Array<string> {
   const weeks = ['日', '月', '火', '水', '木', '金', '土'];
@@ -34,20 +42,46 @@ function getListOfWeeks(): Array<string> {
   return weeksListFromToday;
 }
 
+const formSchema = z.object({
+  title: z.string(),
+  deadline: z.date().transform((value) => format(value, 'yyyy/MM/dd')),
+  content: z.string(),
+});
+
 export default function AssignmentPage() {
+  const authorizedUser = useCurrentUser();
   const thisMonthAndYear = format(new Date(), 'MM月 yyyy');
   const [openAssignmentDialog, setOpenAssignmentDialog] = useState(false);
-  const [assignmentDialogState, setAssignmentDialogState] = useState<{
-    title: string;
-    content: string;
-    deadline: string;
-    teacherId: string;
-    studentId: string;
-  }>();
+  const [assignmentDateForDialogState, setAssignmentDateForDialogState] =
+    useState<string>('');
+
+  const { register, handleSubmit, control, formState } = useForm<
+    z.infer<typeof formSchema>
+  >({ resolver: zodResolver(formSchema) });
+  const [getAssignmentQuery, { isLoading: getAssignmentQueryProgress }] =
+    useQuery(getAssignment, null, { suspense: false });
   const [
     createAssignmentMutation,
     { isLoading: createAssignmentMutationProgress },
   ] = useMutation(createAssignment);
+  const assignmentMapByDate = useMemo(() => {
+    getAssignmentQuery?.reduce((map, cur) => {
+      const list: Object[] = [];
+      if (map.get(cur.deadline)) {
+        list.push(cur);
+        return map.set(cur.deadline, list);
+      }
+      list.push(cur);
+      return map.set(cur.deadline, list);
+    }, new Map());
+  }, []);
+
+  const isLoading =
+    createAssignmentMutationProgress || getAssignmentQueryProgress;
+
+  if (!authorizedUser) {
+    return <LinearProgress />;
+  }
 
   return (
     <Layout>
@@ -110,26 +144,21 @@ export default function AssignmentPage() {
                     </ListItem>
                     <Divider />
                   </List>
-                  <Button
-                    sx={{ width: 200, mt: 1 }}
-                    variant="outlined"
-                    startIcon={<Add />}
-                    onClick={() => {
-                      setOpenAssignmentDialog(true);
-                      setAssignmentDialogState({
-                        deadline: format(
-                          addDays(new Date(), index),
-                          'yyyy/MM/dd'
-                        ),
-                        title: '',
-                        content: '',
-                        teacherId: '',
-                        studentId: '',
-                      });
-                    }}
-                  >
-                    課題を追加する
-                  </Button>
+                  {authorizedUser.role === 'TEACHER' && (
+                    <Button
+                      sx={{ width: 200, mt: 1 }}
+                      variant="outlined"
+                      startIcon={<Add />}
+                      onClick={() => {
+                        setOpenAssignmentDialog(true);
+                        setAssignmentDateForDialogState(
+                          format(addDays(new Date(), index), 'yyyy/MM/dd')
+                        );
+                      }}
+                    >
+                      課題を追加する
+                    </Button>
+                  )}
                 </Stack>
               );
             })}
@@ -140,20 +169,19 @@ export default function AssignmentPage() {
         <Dialog open fullWidth>
           <DialogTitle>課題を追加する</DialogTitle>
           <DialogContent>
-            <Stack spacing={3}>
-              <TextField
-                value={assignmentDialogState?.title ?? ''}
-                label="タイトル"
+            <Stack mt={3} spacing={3}>
+              <TextField {...register('title')} label="タイトル" />
+              <Controller
+                control={control}
+                name="deadline"
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    value={new Date(assignmentDateForDialogState)}
+                  />
+                )}
               />
-              <DatePicker
-                value={
-                  assignmentDialogState?.deadline
-                    ? new Date(assignmentDialogState?.deadline)
-                    : new Date()
-                }
-                format="yyyy/MM/dd"
-              />
-              <TextField label="コメント" />
+              <TextField {...register('content')} label="コメント" />
             </Stack>
           </DialogContent>
           <DialogActions>
@@ -166,7 +194,18 @@ export default function AssignmentPage() {
               キャンセル
             </Button>
             <Button
-              disabled={Boolean(assignmentDialogState === undefined)}
+              onClick={handleSubmit(async (data) => {
+                console.log(data);
+                await createAssignmentMutation({
+                  userId: authorizedUser.id,
+                  studentId: '266f0c8f-a1de-4983-86e6-603501acbb29',
+                  title: data.title,
+                  content: data.content,
+                  deadline: data.deadline,
+                  isDone: false,
+                });
+              })}
+              // disabled={!formState.isValid}
               variant="contained"
             >
               送信
@@ -174,6 +213,12 @@ export default function AssignmentPage() {
           </DialogActions>
         </Dialog>
       )}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Layout>
   );
 }
