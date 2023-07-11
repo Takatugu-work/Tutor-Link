@@ -10,6 +10,10 @@ import type { Prisma } from '@prisma/client';
 // ENUMS
 /////////////////////////////////////////
 
+export const AssignmentOrderByRelevanceFieldEnumSchema = z.enum(['id','title','deadline','teacherId','studentId','content']);
+
+export const AssignmentScalarFieldEnumSchema = z.enum(['id','title','deadline','teacherId','studentId','content','isDone']);
+
 export const ChatOrderByRelevanceFieldEnumSchema = z.enum(['id','teacherId','studentId','lastMessage']);
 
 export const ChatScalarFieldEnumSchema = z.enum(['id','teacherId','studentId','lastMessage','lastMessageTimestamp','createdAt','updatedAt']);
@@ -143,6 +147,22 @@ export const MessageSchema = z.object({
 })
 
 export type Message = z.infer<typeof MessageSchema>
+
+/////////////////////////////////////////
+// ASSIGNMENT SCHEMA
+/////////////////////////////////////////
+
+export const AssignmentSchema = z.object({
+  // omitted: id: z.string().uuid(),
+  title: z.string(),
+  deadline: z.string(),
+  teacherId: z.string(),
+  studentId: z.string(),
+  content: z.string().nullable(),
+  isDone: z.boolean(),
+})
+
+export type Assignment = z.infer<typeof AssignmentSchema>
 
 /////////////////////////////////////////
 // SESSION SCHEMA

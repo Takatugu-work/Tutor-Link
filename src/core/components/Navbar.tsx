@@ -4,6 +4,7 @@ import {
   Description,
   HowToReg,
   Login,
+  Menu,
   Message,
   PermIdentityOutlined,
   School,
@@ -13,9 +14,6 @@ import {
   Box,
   Button,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
   Stack,
   SwipeableDrawer,
   Toolbar,
@@ -35,10 +33,6 @@ import {
   SEARCHTEACHER,
   USER,
 } from 'src/router/root';
-import { Menu } from '@mui/icons-material';
-import Logo from '../logo';
-
-type Anchor = 'left';
 
 export function Navbar() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -72,6 +66,7 @@ export function Navbar() {
             <Menu sx={{ fontSize: 35 }} />
           </IconButton>
           <Typography
+            color="text.secondary"
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
@@ -125,10 +120,12 @@ export function Navbar() {
           >
             <Menu sx={{ fontSize: 35 }} />
           </IconButton>
-          <Typography variant="h6">Tutor Link</Typography>
+          <Typography color="text.secondary" variant="h6">
+            Tutor Link
+          </Typography>
         </Stack>
         <Stack
-          spacing={3}
+          spacing={1}
           sx={{ marginX: 3 }}
           direction="column"
           alignItems="flex-start"
@@ -141,9 +138,9 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <School sx={{ fontSize: 30 }} />
+                  <School sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{ color: 'black', fontSize: 20 }}
                     component={Link}
                     href={SEARCHTEACHER}
                   >
@@ -155,9 +152,9 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <AssignmentInd sx={{ fontSize: 30 }} />
+                  <AssignmentInd sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{ color: 'black', fontSize: 20 }}
                     component={Link}
                     href={SEARCHSTUDENT}
                   >
@@ -169,9 +166,9 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Description sx={{ fontSize: 30 }} />
+                  <Description sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{ color: 'black', fontSize: 20 }}
                     component={Link}
                     href={ASSIGNMENT}
                   >
@@ -183,9 +180,9 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Message sx={{ fontSize: 30 }} />
+                  <Message sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{ color: 'text.secondary', fontSize: 20 }}
                     component={Link}
                     href={CHAT}
                   >
@@ -196,9 +193,9 @@ export function Navbar() {
             )
           ) : (
             <Stack direction="row" justifyContent="center" alignItems="center">
-              <School sx={{ fontSize: 30 }} />
+              <School sx={{ color: 'text.secondary' }} />
               <Button
-                sx={{ color: 'black', fontSize: 25 }}
+                sx={{ color: 'text.secondary', fontSize: 20 }}
                 component={Link}
                 href={SEARCHTEACHER}
               >
@@ -215,9 +212,11 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <AssignmentInd sx={{ fontSize: 30 }} />
+                  <AssignmentInd
+                    sx={{ fontSize: 30, color: 'text.secondary' }}
+                  />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{ color: 'text.secondary', fontSize: 20 }}
                     component={Link}
                     href={SEARCHSTUDENT}
                   >
@@ -229,9 +228,12 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Description sx={{ fontSize: 30 }} />
+                  <Description sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{
+                      color: 'text.secondary',
+                      fontSize: 20,
+                    }}
                     component={Link}
                     href={ASSIGNMENT}
                   >
@@ -243,9 +245,12 @@ export function Navbar() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Message sx={{ fontSize: 30 }} />
+                  <Message sx={{ color: 'text.secondary' }} />
                   <Button
-                    sx={{ color: 'black', fontSize: 25 }}
+                    sx={{
+                      color: 'text.secondary',
+                      fontSize: 20,
+                    }}
                     component={Link}
                     href={CHAT}
                   >
@@ -256,9 +261,12 @@ export function Navbar() {
             )
           ) : (
             <Stack direction="row" justifyContent="center" alignItems="center">
-              <AssignmentInd sx={{ fontSize: 30 }} />
+              <AssignmentInd sx={{ color: 'text.secondary' }} />
               <Button
-                sx={{ color: 'black', fontSize: 25 }}
+                sx={{
+                  fontSize: 20,
+                  color: 'text.secondary',
+                }}
                 component={Link}
                 href={SEARCHSTUDENT}
               >
@@ -273,9 +281,9 @@ export function Navbar() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <HowToReg />
+                <HowToReg sx={{ color: 'text.secondary' }} />
                 <Button
-                  sx={{ color: 'black', fontSize: 25 }}
+                  sx={{ color: 'text.secondary', fontSize: 20 }}
                   component={Link}
                   href={REGISTER}
                 >
@@ -287,9 +295,9 @@ export function Navbar() {
                 justifyContent="center"
                 alignItems="center"
               >
-                <Login />
+                <Login sx={{ color: 'text.secondary' }} />
                 <Button
-                  sx={{ color: 'black', fontSize: 30 }}
+                  sx={{ color: 'text.secondary', fontSize: 20 }}
                   component={Link}
                   href={LOGIN}
                 >

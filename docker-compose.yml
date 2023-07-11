@@ -10,6 +10,3 @@ services:
       - POSTGRES_USER=tutor_link_user
       - POSTGRES_PASSWORD=tutor_link_password
       - POSTGRES_DB=tutor_link
-
-volumes:
-  data:

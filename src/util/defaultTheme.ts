@@ -7,4 +7,7 @@ export const theme = createTheme({
       dark: '#4B9EFF',
     },
   },
+  typography: {
+    fontFamily: ['"Zen Kaku Gothic New"'].join(','),
+  },
 });

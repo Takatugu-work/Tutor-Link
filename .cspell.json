@@ -15,7 +15,8 @@
     "SEARCHSTUDENT",
     "SEARCHTEACHER",
     "Overridable",
-    "Swipeable"
+    "Swipeable",
+    "Kaku"
   ],
   "ignorePaths": [
     ".vscode",
